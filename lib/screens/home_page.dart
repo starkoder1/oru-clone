@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:oru_copy/widgets/banner_widget.dart';
+import 'package:oru_copy/widgets/hamburger_menu.dart';
 import 'package:oru_copy/widgets/horizontal_nav_btn.dart';
+import 'package:oru_copy/widgets/bottom_sheets/number_bottom_sheet.dart';
 import 'package:oru_copy/widgets/mind_menu_item.dart';
+import 'package:oru_copy/widgets/bottom_sheets/name_bottom_sheet.dart';
+import 'package:oru_copy/widgets/bottom_sheets/otp_bottom_sheet.dart';
 
 class HomePageScreen extends StatefulWidget {
   const HomePageScreen({super.key});
@@ -13,7 +17,7 @@ class HomePageScreen extends StatefulWidget {
 class _HomePageScreenState extends State<HomePageScreen> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return Scaffold(drawer: HamburgerMenu(),
       body: SafeArea(
         child: CustomScrollView(
           slivers: <Widget>[
@@ -25,12 +29,15 @@ class _HomePageScreenState extends State<HomePageScreen> {
               expandedHeight: 70.0, // Reduced expandedHeight to 60.0**
               backgroundColor: Colors.white,
               elevation: 0,
-              leading: IconButton(
-                icon: const Icon(Icons.menu, color: Colors.black),
-                onPressed: () {
-                  // TODO: Implement Hamburger menu action
-                },
+              leading: Builder(
+                builder: (context) => IconButton(
+                  icon: const Icon(Icons.menu, color: Colors.black),
+                  onPressed: () {
+                    Scaffold.of(context).openDrawer();
+                  },
+                ),
               ),
+              
               title: const Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -62,8 +69,45 @@ class _HomePageScreenState extends State<HomePageScreen> {
                     ),
                     const SizedBox(width: 10),
                     ElevatedButton(
-                      onPressed: () {
-                        // TODO: Implement Login action
+                      onPressed: () async {
+                        // Await the login bottom sheet
+                        final loginResult = await showModalBottomSheet<bool>(
+                          context: context,
+                          isScrollControlled: true,
+                          backgroundColor: Colors.white,
+                          shape: const RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.vertical(top: Radius.circular(16)),
+                          ),
+                          builder: (context) =>  NumberBottomSheet(),
+                        );
+
+                        if (loginResult == true) {
+                          final otpResult = await showModalBottomSheet<bool>(
+                            context: context,
+                            isScrollControlled: true,
+                            backgroundColor: Colors.transparent,
+                            shape: const RoundedRectangleBorder(
+                              borderRadius: BorderRadius.vertical(
+                                  top: Radius.circular(16)),
+                            ),
+                            builder: (context) => const OtpBottomSheet(),
+                          );
+
+                          if (otpResult == true) {
+                            await showModalBottomSheet(
+                              context: context,
+                              isScrollControlled: true,
+                              backgroundColor: Colors.white,
+                              shape: const RoundedRectangleBorder(
+                                borderRadius: BorderRadius.vertical(
+                                    top: Radius.circular(16)),
+                              ),
+                              builder: (context) =>  NameBottomSheet(),
+                              
+                            );
+                          }
+                        }
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.yellow.shade700,
@@ -251,7 +295,6 @@ class _HomePageScreenState extends State<HomePageScreen> {
                             "Best deals in India",
                             style: TextStyle(
                                 fontWeight: FontWeight.bold, fontSize: 18),
-                                
                           ),
                         ),
                         const SizedBox(height: 300),
@@ -297,8 +340,6 @@ class _HomePageScreenState extends State<HomePageScreen> {
       ],
     );
   }
-
-  
 }
 
 // A custom delegate to create a pinned persistent header.
