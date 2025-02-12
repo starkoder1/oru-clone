@@ -47,7 +47,7 @@ class OtpBottomSheet extends ConsumerWidget {
               ElevatedButton(
                 onPressed: () {
                   Navigator.pop(context, true);
-                }, // Add your verification logic here
+                }, 
                 style: ElevatedButton.styleFrom(
                   minimumSize: const Size(double.infinity, 48),
                   backgroundColor: Colors.deepPurple,

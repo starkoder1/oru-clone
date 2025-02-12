@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart'; // Import Riverpod
+import 'package:flutter_riverpod/flutter_riverpod.dart'; 
 import 'package:oru_copy/screens/name_screen.dart';
 import 'package:oru_copy/screens/otp_screen.dart';
-import 'package:oru_copy/screens/splash_screen.dart'; // Import NameScreen
+import 'package:oru_copy/screens/splash_screen.dart'; 
 
 void main() {
   runApp(
-    const ProviderScope( // Wrap MyApp with ProviderScope
+    const ProviderScope( 
       child: MyApp(),
     ),
   );
@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         useMaterial3: true,
       ),
-      home:  SplashScreen(), // Set NameScreen as home
+      home:  SplashScreen(), 
     );
   }
 }

@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:oru_copy/providers/paginated_products_provider.dart';
+import 'package:oru_copy/widgets/product_card_widgets/product_card_list_with_ads.dart';
 import 'package:oru_copy/widgets/banner_widget.dart';
+import 'package:oru_copy/widgets/brand_widgets/brand_list.dart';
 import 'package:oru_copy/widgets/hamburger_menu.dart';
 import 'package:oru_copy/widgets/horizontal_nav_btn.dart';
 import 'package:oru_copy/widgets/bottom_sheets/number_bottom_sheet.dart';
@@ -7,26 +11,53 @@ import 'package:oru_copy/widgets/mind_menu_item.dart';
 import 'package:oru_copy/widgets/bottom_sheets/name_bottom_sheet.dart';
 import 'package:oru_copy/widgets/bottom_sheets/otp_bottom_sheet.dart';
 
-class HomePageScreen extends StatefulWidget {
+class HomePageScreen extends ConsumerStatefulWidget {
   const HomePageScreen({super.key});
 
   @override
-  State<HomePageScreen> createState() => _HomePageScreenState();
+  ConsumerState<HomePageScreen> createState() => _HomePageScreenState();
 }
 
-class _HomePageScreenState extends State<HomePageScreen> {
+class _HomePageScreenState extends ConsumerState<HomePageScreen> {
+  final ScrollController _scrollController = ScrollController(); // ScrollController
+
+  @override
+  void initState() {
+    super.initState();
+    // Initial load is triggered by provider automatically on first watch
+    _scrollController.addListener(_scrollListener);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _scrollListener() {
+    if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
+      // Load next page using the Riverpod Notifier
+      ref.read(paginatedProductProvider.notifier).loadNextPage(); // Use Riverpod to call loadNextPage
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(drawer: HamburgerMenu(),
+    // Watch the Riverpod provider for the PaginatedProductState
+    final productState = ref.watch(paginatedProductProvider);
+
+    return Scaffold(
+      drawer: HamburgerMenu(),
       body: SafeArea(
         child: CustomScrollView(
+          controller: _scrollController,
           slivers: <Widget>[
-            // This SliverAppBar will disappear on scroll.
+            // AppBar (disappears on scroll) - unchanged
             SliverAppBar(
               pinned: false,
               floating: true,
               snap: true,
-              expandedHeight: 70.0, // Reduced expandedHeight to 60.0**
+              expandedHeight: 70.0,
               backgroundColor: Colors.white,
               elevation: 0,
               leading: Builder(
@@ -37,7 +68,6 @@ class _HomePageScreenState extends State<HomePageScreen> {
                   },
                 ),
               ),
-              
               title: const Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -70,7 +100,6 @@ class _HomePageScreenState extends State<HomePageScreen> {
                     const SizedBox(width: 10),
                     ElevatedButton(
                       onPressed: () async {
-                        // Await the login bottom sheet
                         final loginResult = await showModalBottomSheet<bool>(
                           context: context,
                           isScrollControlled: true,
@@ -79,7 +108,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
                             borderRadius:
                                 BorderRadius.vertical(top: Radius.circular(16)),
                           ),
-                          builder: (context) =>  NumberBottomSheet(),
+                          builder: (context) => NumberBottomSheet(),
                         );
 
                         if (loginResult == true) {
@@ -103,8 +132,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
                                 borderRadius: BorderRadius.vertical(
                                     top: Radius.circular(16)),
                               ),
-                              builder: (context) =>  NameBottomSheet(),
-                              
+                              builder: (context) => NameBottomSheet(),
                             );
                           }
                         }
@@ -125,6 +153,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
                 ),
               ],
             ),
+            // Persistent Header (stays at top) - unchanged
             SliverPersistentHeader(
               pinned: true,
               delegate: _SliverAppBarDelegate(
@@ -196,6 +225,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
                 ),
               ),
             ),
+            // Product List and Ads (using ProductListWithAds widget)
             SliverList(
               delegate: SliverChildListDelegate(
                 [
@@ -263,8 +293,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
                               ),
                             ),
                             IconButton(
-                              icon:
-                                  const Icon(Icons.arrow_forward_ios, size: 16),
+                              icon: const Icon(Icons.arrow_forward_ios, size: 16),
                               onPressed: () {
                                 // TODO: Implement "See All Brands" action
                               },
@@ -272,21 +301,9 @@ class _HomePageScreenState extends State<HomePageScreen> {
                           ],
                         ),
                         const SizedBox(height: 5),
-                        SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: Row(
-                            children: [
-                              _buildBrandLogo('Apple'),
-                              const SizedBox(width: 15),
-                              _buildBrandLogo('MI'),
-                              const SizedBox(width: 15),
-                              _buildBrandLogo('SAMSUNG'),
-                              const SizedBox(width: 15),
-                              _buildBrandLogo('vivo'),
-                              const SizedBox(width: 15),
-                              _buildBrandLogo('realme'),
-                            ],
-                          ),
+                        SizedBox(
+                          height: 100,
+                          child: BrandListWidget(),
                         ),
                         const SizedBox(height: 30),
                         Padding(
@@ -297,7 +314,21 @@ class _HomePageScreenState extends State<HomePageScreen> {
                                 fontWeight: FontWeight.bold, fontSize: 18),
                           ),
                         ),
-                        const SizedBox(height: 300),
+                        const SizedBox(height: 10),
+                        // **Use productState.productList from Riverpod provider**
+                        ProductListWithAds(products: productState.productList),
+                        // **Loading indicator based on productState.isLoadingNextPage**
+                        if (productState.isLoadingNextPage && productState.hasMorePages)
+                          const Padding(
+                            padding: EdgeInsets.all(16.0),
+                            child: Center(child: CircularProgressIndicator()),
+                          ),
+                        // **Optional Error message display**
+                        if (productState.error != null)
+                          Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Center(child: Text('Error: ${productState.error!}')),
+                          ),
                       ],
                     ),
                   ),
@@ -319,30 +350,10 @@ class _HomePageScreenState extends State<HomePageScreen> {
     );
   }
 
-  Widget _buildBrandLogo(String brandName) {
-    return Column(
-      children: [
-        CircleAvatar(
-          radius: 30,
-          backgroundColor: Colors.grey.shade200,
-          child: Center(
-            child: Text(
-              brandName.substring(0, 1).toUpperCase(),
-              style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.grey),
-            ),
-          ),
-        ),
-        const SizedBox(height: 5),
-        Text(brandName, style: const TextStyle(fontSize: 12)),
-      ],
-    );
-  }
+  
 }
 
-// A custom delegate to create a pinned persistent header.
+
 class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   final double height;
   final Widget child;

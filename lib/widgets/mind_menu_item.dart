@@ -1,14 +1,14 @@
-// mind_menu_item.dart
+
 import 'package:flutter/material.dart';
 
 class MindMenuItem extends StatelessWidget {
-  final String imageAssetPath; // Changed to imageAssetPath
+  final String imageAssetPath; 
   final String text;
   final VoidCallback? onPressed;
 
   const MindMenuItem({
     super.key,
-    required this.imageAssetPath, // Changed to imageAssetPath
+    required this.imageAssetPath, 
     required this.text,
     this.onPressed,
   });
@@ -20,14 +20,14 @@ class MindMenuItem extends StatelessWidget {
       children: [
         IconButton(
           iconSize: 40,
-          icon: Image.asset( // Use Image.asset
+          icon: Image.asset( 
             imageAssetPath,
             width: 100,
             height: 100,
           ),
           onPressed: onPressed,
         ),
-        // const SizedBox(height: 5),
+        
         Text(
           text,
           textAlign: TextAlign.center,

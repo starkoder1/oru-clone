@@ -1,4 +1,4 @@
-// banner_carousel.dart
+
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
@@ -14,7 +14,7 @@ class _BannerCarouselState extends State<BannerCarousel> {
   final CarouselSliderController _controller = CarouselSliderController();
 
   final List<String> _bannerImagePaths = [
-    // Moved banner paths to state for cleaner dot logic
+    
     'assets/banners/cash_phone.png',
     'assets/banners/register_banner.png',
     'assets/banners/cash_phone.png',
@@ -43,7 +43,7 @@ class _BannerCarouselState extends State<BannerCarousel> {
             },
           ),
           items: _bannerImagePaths.map((imagePath) {
-            // Use _bannerImagePaths directly
+            
             return Builder(
               builder: (BuildContext context) {
                 return Container(
@@ -66,7 +66,7 @@ class _BannerCarouselState extends State<BannerCarousel> {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children:
-              _buildDotIndicators(), // Use a separate method for dot indicators
+              _buildDotIndicators(), 
         ),
       ],
     );
@@ -81,9 +81,9 @@ class _BannerCarouselState extends State<BannerCarousel> {
           child: Icon(
             _current == i
                 ? Icons.circle
-                : Icons.circle_outlined, // Use Material Icons
+                : Icons.circle_outlined, 
             color: _current == i ? Colors.grey.shade900 : Colors.grey.shade400,
-            size: 10.0, // Adjust size as needed
+            size: 10.0, 
           ),
         ),
       );

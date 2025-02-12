@@ -1,13 +1,13 @@
 class Brand {
-  final String name;
-  final String imageUrl;
+  final String make;
+  final String imagePath;
 
-  Brand({required this.name, required this.imageUrl});
+  Brand({required this.make, required this.imagePath});
 
   factory Brand.fromJson(Map<String, dynamic> json) {
     return Brand(
-      name: json['name'] ?? '',
-      imageUrl: json['image'] ?? '',
+      make: json['make'],
+      imagePath: json['imagePath'],
     );
   }
 }
