@@ -24,7 +24,7 @@ class UsernameNotifier extends StateNotifier<String> {
     return '';
   }
 
-
+  // **`updateUsername` function is now INSIDE UsernameNotifier:**
   Future<bool> updateUsername({required String userName}) async {
     final countryCode = 91;
     final baseUrl = 'http://40.90.224.241:5000';
@@ -46,7 +46,7 @@ class UsernameNotifier extends StateNotifier<String> {
       final response = await http.post(
         uri,
         headers: headers,
-        
+        // ** ENSURE YOUR REQUEST BODY IS EXACTLY LIKE THIS:**
         body: jsonEncode({
           "countryCode": countryCode,
           "userName": userName,

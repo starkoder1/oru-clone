@@ -15,6 +15,7 @@ class SplashScreen extends ConsumerStatefulWidget {
 
 class _SplashScreenState extends ConsumerState<SplashScreen> {
   final NotificationService _notificationService = NotificationService();
+  final OtpAuthService _otpAuthService = OtpAuthService();
 
   @override
   void initState() {
@@ -23,43 +24,30 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
   }
 
   Future<void> _initialize() async {
-    // Check if the FCM token is already stored (e.g., check shared preferences or Firebase)
-    // If not, request permission and subscribe to topics
     await _notificationService.requestPermissionAndSubscribe();
-
-    final otpAuthService = OtpAuthService();
-    final isLoggedInResponse =
-        await otpAuthService.isLoggedIn();
+    final isLoggedInResponse = await _otpAuthService.isLoggedIn();
 
     if (isLoggedInResponse['isLoggedIn'] == true) {
-      final userData = isLoggedInResponse['user'] as Map<String, dynamic>?; 
+      final userData = isLoggedInResponse['user'] as Map<String, dynamic>?;
       final mobileNumber = userData?['mobileNumber'] as String? ?? '';
       final userName = userData?['userName'] as String? ?? '';
 
-      print('User Mobile Number: $mobileNumber');
+      debugPrint('User Mobile Number: $mobileNumber');
 
-      // If userName is empty, navigate to name screen, else home screen
       if (userName.isEmpty) {
-        _navigateToConfirmNameScreen();
+        _navigateToScreen(const NameScreen());
       } else {
-        _navigateToHomeScreen();
+        _navigateToScreen(const HomePageScreen());
       }
     } else {
-      _navigateToHomeScreen();
+      _navigateToScreen(const HomePageScreen());
     }
   }
 
-  void _navigateToHomeScreen() {
+  void _navigateToScreen(Widget screen) {
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (_) => HomePageScreen()),
-    );
-  }
-
-  void _navigateToConfirmNameScreen() {
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (_) => NameScreen()),
+      MaterialPageRoute(builder: (_) => screen),
     );
   }
 
@@ -68,7 +56,10 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: Center(
-        child: Lottie.asset('assets/animations/splash.json', fit: BoxFit.contain),
+        child: Lottie.asset(
+          'assets/animations/splash.json',
+          fit: BoxFit.contain,
+        ),
       ),
     );
   }

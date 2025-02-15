@@ -154,7 +154,7 @@ class HamburgerMenu extends ConsumerWidget {
             icon: Icon(icon, size: 28),
             onPressed: () {}, // Void action for now
           ),
-          Text(label, style: TextStyle(fontSize: 12)),
+          Text(label, style: TextStyle(fontSize: 11)),
         ],
       ),
     );
