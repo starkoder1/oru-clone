@@ -48,45 +48,48 @@ class _OtpBottomSheetState extends ConsumerState<OtpBottomSheet> {
           const SizedBox(height: 16),
           const OtpWidget(), // Keeps your OTP input widget
           const SizedBox(height: 24),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.indigo.shade700,
-              padding: const EdgeInsets.symmetric(vertical: 15),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
+          Container(
+            width: double.infinity,
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.indigo.shade700,
+                padding: const EdgeInsets.symmetric(vertical: 15),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
               ),
+              onPressed: _isValidatingOtp
+                  ? null
+                  : () async {
+                      print(">>> Validate OTP Button Pressed in OtpBottomSheet!");
+                      final mobileNumber = ref.read(phoneNumberProvider);
+                      final otp = ref.read(otpProvider);
+            
+                      print(">>> Mobile Number from Provider: $mobileNumber");
+                      print(">>> OTP from Provider: $otp");
+            
+                      if (otp.isNotEmpty) {
+                        setState(() {
+                          _isValidatingOtp = true;
+                        });
+            
+                        print(">>> Calling validateOtpAction...");
+                        await validateOtpAction(mobileNumber: mobileNumber, otp: otp, ref: ref);
+                        print(">>> validateOtpAction COMPLETED.");
+            
+                        setState(() {
+                          _isValidatingOtp = false;
+                        });
+            
+                        Navigator.of(context).pop(true);
+                      } else {
+                        print('Please enter OTP');
+                      }
+                    },
+              child: _isValidatingOtp
+                  ? const CircularProgressIndicator(color: Colors.white)
+                  : const Text('Verify OTP',style: TextStyle(color: Colors.white),),
             ),
-            onPressed: _isValidatingOtp
-                ? null
-                : () async {
-                    print(">>> Validate OTP Button Pressed in OtpBottomSheet!");
-                    final mobileNumber = ref.read(phoneNumberProvider);
-                    final otp = ref.read(otpProvider);
-
-                    print(">>> Mobile Number from Provider: $mobileNumber");
-                    print(">>> OTP from Provider: $otp");
-
-                    if (otp.isNotEmpty) {
-                      setState(() {
-                        _isValidatingOtp = true;
-                      });
-
-                      print(">>> Calling validateOtpAction...");
-                      await validateOtpAction(mobileNumber: mobileNumber, otp: otp, ref: ref);
-                      print(">>> validateOtpAction COMPLETED.");
-
-                      setState(() {
-                        _isValidatingOtp = false;
-                      });
-
-                      Navigator.of(context).pop(true);
-                    } else {
-                      print('Please enter OTP');
-                    }
-                  },
-            child: _isValidatingOtp
-                ? const CircularProgressIndicator(color: Colors.white)
-                : const Text('Verify OTP'),
           ),
         ],
       ),

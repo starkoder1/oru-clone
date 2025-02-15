@@ -105,7 +105,7 @@ class NotificationService {
     const NotificationDetails notificationDetails = NotificationDetails(android: androidDetails);
 
     await _flutterLocalNotificationsPlugin.show(
-      DateTime.now().millisecondsSinceEpoch, // Dynamic ID
+     DateTime.now().millisecondsSinceEpoch % 1073741824, // Dynamic ID
       message.notification?.title ?? "No Title",
       message.notification?.body ?? "No Body",
       notificationDetails,

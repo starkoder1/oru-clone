@@ -44,6 +44,7 @@ dependencies:
   firebase_database:
   flutter_local_notifications:
   flutter_animate: ^4.5.2
+  flutter_launcher_icons:
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -97,3 +98,10 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/icons/Logo.png" # Path to your high-resolution logo image
+  min_sdk_android: 21 # Required for adaptive icons on Android
+  adaptive_icon_background: "#ffffff" # Background color for Android adaptive icon (white in this example)
+  adaptive_icon_foreground: "assets/icons/Logo.png" #  Using the same image for foreground for now

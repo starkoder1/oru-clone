@@ -25,8 +25,10 @@ class HomePageScreen extends ConsumerStatefulWidget {
 }
 
 class _HomePageScreenState extends ConsumerState<HomePageScreen> {
-  final ScrollController _scrollController =
-      ScrollController(); // ScrollController
+  final ScrollController _scrollController = ScrollController(); // ScrollController
+  double _fabScale = 1.0; // Initial scale is 1.0 (fully visible)
+  double _previousScrollOffset = 0;
+
   @override
   void initState() {
     super.initState();
@@ -41,6 +43,19 @@ class _HomePageScreenState extends ConsumerState<HomePageScreen> {
   }
 
   void _scrollListener() {
+    if (_scrollController.position.pixels > _previousScrollOffset) {
+      // Scrolling down, scale down FAB
+      setState(() {
+        _fabScale = 0.0; // Scale to 0 to hide
+      });
+    } else if (_scrollController.position.pixels < _previousScrollOffset) {
+      // Scrolling up, scale up FAB
+      setState(() {
+        _fabScale = 1.0; // Scale to 1 to show
+      });
+    }
+    _previousScrollOffset = _scrollController.position.pixels;
+
     if (_scrollController.position.pixels >=
         _scrollController.position.maxScrollExtent * 0.1) {
       // Load next page when scrolled 80% of the way down
@@ -57,7 +72,8 @@ class _HomePageScreenState extends ConsumerState<HomePageScreen> {
     // Watch the Riverpod provider for the PaginatedProductState
     final productState = ref.watch(paginatedProductProvider);
 
-    return Scaffold(backgroundColor: Colors.white,
+    return Scaffold(
+      backgroundColor: Colors.white,
       drawer: HamburgerMenu(),
       body: SafeArea(
         child: CustomScrollView(
@@ -187,7 +203,6 @@ class _HomePageScreenState extends ConsumerState<HomePageScreen> {
                             buildNavButton("Register your Store"),
                             const SizedBox(width: 10),
                             buildNavButton("Get the App"),
-                            
                           ],
                         ),
                       ),
@@ -316,8 +331,7 @@ class _HomePageScreenState extends ConsumerState<HomePageScreen> {
                               ),
                             ),
                             IconButton(
-                              icon:
-                                  const Icon(Icons.arrow_forward_ios, size: 16),
+                              icon: const Icon(Icons.arrow_forward_ios, size: 16),
                               onPressed: () {
                                 // TODO: Implement "See All Brands" action
                               },
@@ -431,17 +445,23 @@ class _HomePageScreenState extends ConsumerState<HomePageScreen> {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          // TODO: Implement Sell + action
-        },
-        backgroundColor: Colors.yellow.shade700,
-        foregroundColor: const Color.fromARGB(255, 142, 142, 142),
-        label: const Text('Sell +', style: TextStyle(fontSize: 18)),
+      floatingActionButton: AnimatedScale(
+        scale: _fabScale, // Use the scale factor to animate
+        duration: const Duration(milliseconds: 200), // Adjust duration as needed
+        child: FloatingActionButton.extended(
+          onPressed: () {
+            // TODO: Implement Sell + action
+          },
+          backgroundColor: Colors.yellow.shade700,
+          foregroundColor: const Color.fromARGB(255, 142, 142, 142),
+          label: const Text('Sell +', style: TextStyle(fontSize: 18)),
+        ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
+
+  
 }
 
 class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
