@@ -15,7 +15,9 @@ import 'package:oru_copy/widgets/mind_menu_item.dart';
 import 'package:oru_copy/widgets/bottom_sheets/name_bottom_sheet.dart';
 import 'package:oru_copy/widgets/bottom_sheets/otp_bottom_sheet.dart';
 import 'package:oru_copy/widgets/bottom_ui_widgets/faq_section.dart';
-import 'package:oru_copy/widgets/sort_buttons.dart'; // Import FAQ Section
+import 'package:oru_copy/widgets/share_widget.dart';
+import 'package:oru_copy/widgets/sort_buttons.dart';
+import 'package:share_plus/share_plus.dart';
 
 class HomePageScreen extends ConsumerStatefulWidget {
   const HomePageScreen({super.key});
@@ -25,14 +27,13 @@ class HomePageScreen extends ConsumerStatefulWidget {
 }
 
 class _HomePageScreenState extends ConsumerState<HomePageScreen> {
-  final ScrollController _scrollController = ScrollController(); // ScrollController
-  double _fabScale = 1.0; // Initial scale is 1.0 (fully visible)
+  final ScrollController _scrollController = ScrollController();
+  double _fabScale = 1.0;
   double _previousScrollOffset = 0;
 
   @override
   void initState() {
     super.initState();
-    // Initial load is triggered by provider automatically on first watch
     _scrollController.addListener(_scrollListener);
   }
 
@@ -44,21 +45,18 @@ class _HomePageScreenState extends ConsumerState<HomePageScreen> {
 
   void _scrollListener() {
     if (_scrollController.position.pixels > _previousScrollOffset) {
-      // Scrolling down, scale down FAB
       setState(() {
-        _fabScale = 0.0; // Scale to 0 to hide
+        _fabScale = 0.0;
       });
     } else if (_scrollController.position.pixels < _previousScrollOffset) {
-      // Scrolling up, scale up FAB
       setState(() {
-        _fabScale = 1.0; // Scale to 1 to show
+        _fabScale = 1.0;
       });
     }
     _previousScrollOffset = _scrollController.position.pixels;
 
     if (_scrollController.position.pixels >=
         _scrollController.position.maxScrollExtent * 0.1) {
-      // Load next page when scrolled 80% of the way down
       if (!ref.read(paginatedProductProvider).isLoadingNextPage &&
           ref.read(paginatedProductProvider).hasMorePages) {
         ref.read(paginatedProductProvider.notifier).loadNextPage();
@@ -69,7 +67,6 @@ class _HomePageScreenState extends ConsumerState<HomePageScreen> {
   @override
   Widget build(BuildContext context) {
     final globalIsLoggedIn = ref.watch(isLoggedInProvider);
-    // Watch the Riverpod provider for the PaginatedProductState
     final productState = ref.watch(paginatedProductProvider);
 
     return Scaffold(
@@ -79,7 +76,6 @@ class _HomePageScreenState extends ConsumerState<HomePageScreen> {
         child: CustomScrollView(
           controller: _scrollController,
           slivers: <Widget>[
-            // AppBar (disappears on scroll) - unchanged
             SliverAppBar(
               pinned: false,
               floating: true,
@@ -139,7 +135,6 @@ class _HomePageScreenState extends ConsumerState<HomePageScreen> {
                 ),
               ],
             ),
-            // Persistent Header (stays at top) - unchanged
             SliverPersistentHeader(
               pinned: true,
               delegate: _SliverAppBarDelegate(
@@ -211,7 +206,6 @@ class _HomePageScreenState extends ConsumerState<HomePageScreen> {
                 ),
               ),
             ),
-            // Product List and Ads (using ProductListWithAds widget)
             SliverList(
               delegate: SliverChildListDelegate(
                 [
@@ -331,7 +325,8 @@ class _HomePageScreenState extends ConsumerState<HomePageScreen> {
                               ),
                             ),
                             IconButton(
-                              icon: const Icon(Icons.arrow_forward_ios, size: 16),
+                              icon:
+                                  const Icon(Icons.arrow_forward_ios, size: 16),
                               onPressed: () {
                                 // TODO: Implement "See All Brands" action
                               },
@@ -354,23 +349,19 @@ class _HomePageScreenState extends ConsumerState<HomePageScreen> {
                         ),
                         const SizedBox(height: 10),
                         SortFilterButtons(),
-                        // **Use productState.productList from Riverpod provider**
                         ProductListWithAds(products: productState.productList),
-                        // **Loading indicator based on productState.isLoadingNextPage**
                         if (productState.isLoadingNextPage &&
                             productState.hasMorePages)
                           const Padding(
                             padding: EdgeInsets.all(16.0),
                             child: Center(child: CircularProgressIndicator()),
                           ),
-                        // **Optional Error message display**
                         if (productState.error != null)
                           Padding(
                             padding: const EdgeInsets.all(16.0),
                             child: Center(
                                 child: Text('Error: ${productState.error!}')),
                           ),
-                        // ** ADD FAQ SECTION HERE **
                       ],
                     ),
                   ),
@@ -417,28 +408,21 @@ class _HomePageScreenState extends ConsumerState<HomePageScreen> {
                   ),
                   if (!productState.hasMorePages &&
                       productState.faqList.isNotEmpty)
-                    Row(
-                      spacing: 10,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Image.asset(
-                          'assets/images/Group.png',
-                          height: 40,
-                        ),
-                        Image.asset(
-                          'assets/images/Group1.png',
-                          height: 40,
-                        ),
-                        Image.asset(
-                          'assets/images/Group2.png',
-                          height: 40,
-                        ),
-                        Image.asset(
-                          'assets/images/Group3.png',
-                          height: 40,
-                        ),
-                      ],
-                    )
+                    Text(
+                      "Or Share",
+                      style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w600,
+                          color: Color.fromRGBO(54, 54, 54, 1)),
+                      textAlign: TextAlign.center,
+                    ),
+                  SizedBox(
+                    height: 40,
+                  ),
+                  SocialMediaShare(),
+                  SizedBox(
+                    height: 200,
+                  ),
                 ],
               ),
             ),
@@ -446,8 +430,8 @@ class _HomePageScreenState extends ConsumerState<HomePageScreen> {
         ),
       ),
       floatingActionButton: AnimatedScale(
-        scale: _fabScale, // Use the scale factor to animate
-        duration: const Duration(milliseconds: 200), // Adjust duration as needed
+        scale: _fabScale,
+        duration: const Duration(milliseconds: 200),
         child: FloatingActionButton.extended(
           onPressed: () {
             // TODO: Implement Sell + action
@@ -460,8 +444,6 @@ class _HomePageScreenState extends ConsumerState<HomePageScreen> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
-
-  
 }
 
 class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
