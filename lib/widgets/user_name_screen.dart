@@ -26,6 +26,7 @@ class _NameScreenState extends ConsumerState<NameScreenWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final userNameNotifier = ref.watch(userNameProvider.notifier);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
@@ -88,11 +89,13 @@ class _NameScreenState extends ConsumerState<NameScreenWidget> {
         SizedBox(
           width: double.infinity,
           child: ElevatedButton(
-            onPressed: () {
+            onPressed: ()async {
               String userName = _nameController.text.trim();
               if (userName.isNotEmpty) {
                 // **Update Riverpod StateProvider**
-                ref.read(usernameProvider.notifier).state = userName;
+                final isUpdated = await userNameNotifier.updateUsername(
+                  userName: _nameController.text.trim(), // **ONLY pass userName**
+                );
                 print('Username entered: $userName ');
               } else {
                 print('Name field is empty.');

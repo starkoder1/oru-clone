@@ -16,9 +16,11 @@ class _BannerCarouselState extends State<BannerCarousel> {
   final List<String> _bannerImagePaths = [
     
     'assets/banners/cash_phone.png',
+    'assets/banners/used.png',
+    'assets/banners/compare.png',
+    'assets/banners/gold.png',
     'assets/banners/register_banner.png',
-    'assets/banners/cash_phone.png',
-    'assets/banners/register_banner.png',
+
   ];
 
   @override

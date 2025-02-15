@@ -1,19 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:oru_copy/screens/name_screen.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:oru_copy/providers/name_provider.dart';
+import 'package:oru_copy/providers/otp_provider.dart';
 import 'package:oru_copy/screens/number_screen.dart';
 
-class HamburgerMenu extends StatelessWidget {
+
+class HamburgerMenu extends ConsumerWidget {
   const HamburgerMenu({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isLoggedIn = ref.watch(isLoggedInProvider);
+    final userName = ref.watch(userNameProvider);
+
     return Drawer(
       child: Column(
         children: [
           // Top Logo Section
-          SizedBox(
-            height: 50,
-          ),
+          SizedBox(height: 50),
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Row(
@@ -33,28 +37,52 @@ class HamburgerMenu extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Column(
               children: [
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.indigo,
-                      padding: EdgeInsets.symmetric(vertical: 14),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
+                if (!isLoggedIn)
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.indigo,
+                        padding: EdgeInsets.symmetric(vertical: 14),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => NumberScreen()),
+                        );
+                      },
+                      child: Text(
+                        "Login/SignUp",
+                        style: TextStyle(color: Colors.white),
                       ),
                     ),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => NumberScreen()),
-                      );
-                    }, // Replace with actual action
-                    child: Text(
-                      "Login/SignUp",
-                      style: TextStyle(color: Colors.white),
+                  ),
+                if (isLoggedIn)
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Container(
+                      color: Colors.grey[300],
+                      child: Row(
+                        spacing: 10,
+                        children: [
+                          CircleAvatar(
+                            radius: 20,
+                            backgroundImage:
+                                AssetImage('assets/icons/Logo.png'),
+                          ),
+                          Text(
+                            'Hi, $userName',
+                            style: TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.bold),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
                 SizedBox(height: 10),
                 SizedBox(
                   width: double.infinity,
@@ -72,6 +100,16 @@ class HamburgerMenu extends StatelessWidget {
                       style: TextStyle(color: Colors.black),
                     ),
                   ),
+                ),
+                SizedBox(height: 10),
+                TextButton.icon(
+                  onPressed: () async {
+                    await OtpAuthService().logoutAction(
+                        ref); // Call logout action from OtpAuthService
+                    Navigator.pop(context); // Close the drawer after logout
+                  },
+                  icon: Icon(Icons.logout),
+                  label: Text("Logout"),
                 ),
               ],
             ),

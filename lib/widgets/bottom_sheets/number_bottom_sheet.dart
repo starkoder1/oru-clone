@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:oru_copy/providers/login_provider.dart';
 
 class NumberBottomSheet extends ConsumerWidget {
-   NumberBottomSheet({super.key});
+  NumberBottomSheet({super.key});
 
-    final phoneControllerProvider = Provider((ref) => TextEditingController());
+  final phoneControllerProvider = Provider((ref) => TextEditingController());
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // Create a provider for TextEditingController that doesn't auto-dispose
@@ -55,8 +55,16 @@ class NumberBottomSheet extends ConsumerWidget {
             controller: phoneController,
             keyboardType: TextInputType.phone,
             maxLength: 10,
-            onChanged: (value) =>
-                ref.read(phoneNumberProvider.notifier).state = value,
+            cursorErrorColor: Colors.red,
+            onChanged: (value) {
+             
+                ref.read(phoneNumberProvider.notifier).state = value;
+                print({ref.watch(phoneNumberProvider)});
+                print("Phone number: $value");
+               
+              
+              
+            },
             decoration: InputDecoration(
               prefixText: "+91 ",
               border: OutlineInputBorder(
@@ -96,11 +104,12 @@ class NumberBottomSheet extends ConsumerWidget {
             child: ElevatedButton(
               onPressed: _submit,
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.deepPurple,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
+                  backgroundColor: Colors.indigo.shade700,
+                  padding: EdgeInsets.symmetric(vertical: 15),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
                 ),
-              ),
               child: const Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [

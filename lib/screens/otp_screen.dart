@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:oru_copy/providers/login_provider.dart';
 import 'package:oru_copy/widgets/otp_widget.dart';
 import 'package:oru_copy/providers/otp_provider.dart';
 
@@ -53,7 +54,7 @@ class OtpScreen extends ConsumerWidget {
             ),
             SizedBox(height: 15),
             Text(
-              "Please enter the 4 digital verification code sent\nto your mobile number +91-7587329682 via SMS",
+              "Please enter the 4 digital verification code sent\nto your mobile number +91-${ref.watch(phoneNumberProvider)} via SMS",
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 14,
@@ -80,8 +81,10 @@ class OtpScreen extends ConsumerWidget {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: () {
+                onPressed: ()async {
                   String enteredOtp = ref.read(otpProvider);
+                   final mobileNumber = ref.read(phoneNumberProvider);
+                  await validateOtpAction(mobileNumber: mobileNumber, otp: enteredOtp,ref: ref);
                   print("Entered OTP: $enteredOtp");
                   Navigator.popUntil(context, (Route<dynamic> route) => route.isFirst);
                 },

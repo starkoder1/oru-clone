@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:oru_copy/models/product_model.dart';
+import 'package:oru_copy/navigation/bottom_sheet_navigation.dart';
+import 'package:oru_copy/widgets/product_card_widgets/like_button_widget.dart';
 
-class ProductCardWidget extends StatelessWidget {
+class ProductCardWidget extends ConsumerWidget {
   final ProductModel product;
   const ProductCardWidget({super.key, required this.product});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, ref) {
     return Card(
       elevation: 3,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
@@ -31,7 +34,7 @@ class ProductCardWidget extends StatelessWidget {
                           fit: BoxFit.cover,
                           errorBuilder: (context, error, stackTrace) =>
                               Image.asset(
-                            'assets/images/placeholder.png',
+                            'assets/images/Logo.png',
                             fit: BoxFit.cover,
                           ),
                         )
@@ -66,9 +69,15 @@ class ProductCardWidget extends StatelessWidget {
               Positioned(
                 top: 8,
                 right: 8,
-                child:
-                    Icon(Icons.favorite_border, color: Colors.white, size: 22),
+                child: LikeButtonWidget(
+                  listingId: product.id,
+                  onLoginRequired: () async {
+                    // Anonymous function as callback
+                    await triggerLoginNavigation(context, ref);
+                  },
+                ),
               ),
+
               Positioned(
                 bottom: 0,
                 left: 0,
@@ -115,7 +124,7 @@ class ProductCardWidget extends StatelessWidget {
                 // Product specifications (RAM/Storage/Condition)
                 Text(
                   '${product.ram}/${product.storage} GB • ${product.condition}',
-                  style: TextStyle(color: Colors.black54, fontSize: 12),
+                  style: TextStyle(color: Colors.black54, fontSize: 11),
                 ),
                 const SizedBox(height: 8),
                 // Pricing row
@@ -165,7 +174,7 @@ class ProductCardWidget extends StatelessWidget {
                             child: Text(
                               product.location,
                               style: TextStyle(
-                                  color: Colors.grey[700], fontSize: 11),
+                                  color: Colors.grey[700], fontSize: 10.5),
                               overflow: TextOverflow.ellipsis,
                               softWrap: false, // Ensures single-line ellipsis
                             ),
@@ -176,7 +185,7 @@ class ProductCardWidget extends StatelessWidget {
                     const SizedBox(width: 5), // Prevents touching edges
                     Text(
                       product.datePosted,
-                      style: TextStyle(color: Colors.grey[700], fontSize: 11),
+                      style: TextStyle(color: Colors.grey[700], fontSize: 10.5),
                     ),
                   ],
                 ),

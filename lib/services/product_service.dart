@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:oru_copy/models/faq_model.dart';
 import '../models/product_model.dart';
 
 class ProductService {
@@ -70,4 +71,33 @@ class ProductService {
             return [];
         }
     }
+     Future<List<FaqModel>> fetchFAQs() async {
+    final String faqEndpoint = 'http://40.90.224.241:5000/faq'; // FAQ API endpoint
+    final Uri faqUri = Uri.parse(faqEndpoint);
+
+    try {
+      final response = await http.get(faqUri); // Make a GET request to the FAQ endpoint
+
+      print('FAQ API Response Status Code: ${response.statusCode}');
+      print('FAQ API Response Body: ${response.body}');
+
+      if (response.statusCode == 200) {
+        final dynamic jsonData = jsonDecode(response.body);
+
+        if (jsonData is Map<String, dynamic> && jsonData['FAQs'] is List) {
+          final List<dynamic> faqJsonList = jsonData['FAQs'];
+          return faqJsonList.map((json) => FaqModel.fromJson(json)).toList();
+        } else {
+          print('Warning: Unexpected FAQ API response structure.');
+          return []; // Return empty list if structure is not as expected
+        }
+      } else {
+        print('Failed to fetch FAQs. Status Code: ${response.statusCode}');
+        return []; // Return empty list if API call fails
+      }
+    } catch (e) {
+      print('Error fetching FAQs: $e');
+      return []; // Return empty list on error
+    }
+  }
 }
