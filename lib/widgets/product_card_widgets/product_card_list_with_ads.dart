@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:oru_copy/models/product_model.dart';
 import 'package:oru_copy/widgets/advertisement_cards/sell_card1.dart'; // Assuming SellCard1 is your AdWidgetType1
 import 'package:oru_copy/widgets/advertisement_cards/sell_card2.dart';
-import 'dart:math'; // Import for Random
 import 'product_card_widget.dart';
 
 class ProductListWithAds extends StatelessWidget {
@@ -20,7 +19,7 @@ class ProductListWithAds extends StatelessWidget {
     }
 
     List<Widget> items = [];
-    final random = Random(); // Create Random object here, outside the loop
+    int adCardType = 0; // 0 for SellCard1, 1 for SellCard2
 
     for (int index = 0; index < products.length; index++) {
       items.add(Padding(
@@ -28,18 +27,20 @@ class ProductListWithAds extends StatelessWidget {
         child: ProductCardWidget(product: products[index]),
       ));
 
-      if ((index + 1) % 7 == 0 && (index + 1) <= products.length) {
-        // Randomly choose between SellCard1 and AdWidgetType2
-        if (random.nextBool()) {
+      if ((index + 1) % 7 == 0 && (index + 1) <= products.length) { // Display ad after every 2 products instead of 7 as per new request
+        // Alternate between SellCard1 and SellCard2
+        if (adCardType == 0) {
           items.add(const Padding(
             padding: EdgeInsets.symmetric(horizontal: 5.0, vertical: 8.0),
             child: SellCard1(), // Use SellCard1 as one ad type
           ));
+          adCardType = 1; // Next ad will be SellCard2
         } else {
           items.add(const Padding(
             padding: EdgeInsets.symmetric(horizontal: 5.0, vertical: 8.0),
-            child: SellCard2(), // Use AdWidgetType2 as the other ad type
+            child: SellCard2(), // Use SellCard2 as the other ad type
           ));
+          adCardType = 0; // Next ad will be SellCard1
         }
       }
     }
