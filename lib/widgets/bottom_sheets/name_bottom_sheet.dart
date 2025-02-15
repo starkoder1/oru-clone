@@ -9,7 +9,7 @@ class NameBottomSheet extends ConsumerWidget {
   @override
   Widget build(BuildContext context, ref) {
     final userNameNotifier = ref.watch(userNameProvider.notifier);
-    final TextEditingController _controller = TextEditingController();
+    final TextEditingController controller = TextEditingController();
     return Padding(
       padding: EdgeInsets.only(
         left: 16,
@@ -43,7 +43,7 @@ class NameBottomSheet extends ConsumerWidget {
           ),
           SizedBox(height: 5),
           TextField(
-            controller: _controller,
+            controller: controller,
             decoration: InputDecoration(
               hintText: 'Name',
               border: OutlineInputBorder(
@@ -69,9 +69,9 @@ class NameBottomSheet extends ConsumerWidget {
               ),
               onPressed: () async {
                 final isUpdated = await userNameNotifier.updateUsername(
-                  userName: _controller.text.trim(), // **ONLY pass userName**
+                  userName: controller.text.trim(), // **ONLY pass userName**
                 );
-                globalUserName = _controller.text.trim();
+                globalUserName = controller.text.trim();
                 Navigator.pop(context);
               },
               child: Row(

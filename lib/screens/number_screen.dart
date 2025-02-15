@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:oru_copy/screens/otp_screen.dart';
-import 'package:oru_copy/widgets/bottom_sheets/name_bottom_sheet.dart';
-import 'package:oru_copy/widgets/bottom_sheets/number_bottom_sheet.dart';
 import 'package:oru_copy/providers/login_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

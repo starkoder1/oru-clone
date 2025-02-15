@@ -1,4 +1,4 @@
-\`\`\`markdown
+\`\`\`
 
 # ORU Copy - Used Phone Marketplace App
 

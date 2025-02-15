@@ -48,7 +48,7 @@ class _OtpBottomSheetState extends ConsumerState<OtpBottomSheet> {
           const SizedBox(height: 16),
           const OtpWidget(), // Keeps your OTP input widget
           const SizedBox(height: 24),
-          Container(
+          SizedBox(
             width: double.infinity,
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart'; // Import Riverpod
 import 'package:oru_copy/providers/name_provider.dart';
 import 'package:oru_copy/screens/number_screen.dart';
-import 'package:oru_copy/screens/otp_screen.dart';
 // import 'package:oru_copy/providers/username_provider.dart'; // Import your usernameProvider
 
 class NameScreenWidget extends ConsumerStatefulWidget {

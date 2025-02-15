@@ -54,15 +54,15 @@ class NotificationService {
 
   // Save FCM token if not already stored
   Future<void> saveFCMToken(String token) async {
-    final DatabaseReference _dbRef = FirebaseDatabase.instance.ref();
+    final DatabaseReference dbRef = FirebaseDatabase.instance.ref();
 
     try {
-      final snapshot = await _dbRef.child('fcmTokens').orderByChild('fcmToken').equalTo(token).get();
+      final snapshot = await dbRef.child('fcmTokens').orderByChild('fcmToken').equalTo(token).get();
 
       if (snapshot.exists) {
         print('FCM Token already exists.');
       } else {
-        await _dbRef.child('fcmTokens').push().set({
+        await dbRef.child('fcmTokens').push().set({
           'fcmToken': token,
           'createdAt': ServerValue.timestamp,
         });

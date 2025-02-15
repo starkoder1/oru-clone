@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:oru_copy/navigation/bottom_sheet_navigation.dart';
-import 'package:oru_copy/providers/login_provider.dart';
 import 'package:oru_copy/providers/otp_provider.dart';
 import 'package:oru_copy/providers/paginated_products_provider.dart';
 import 'package:oru_copy/widgets/bottom_ui_widgets/offer_ui.dart';
@@ -10,14 +9,10 @@ import 'package:oru_copy/widgets/banner_widget.dart';
 import 'package:oru_copy/widgets/brand_widgets/brand_list.dart';
 import 'package:oru_copy/widgets/hamburger_menu.dart';
 import 'package:oru_copy/widgets/horizontal_nav_btn.dart';
-import 'package:oru_copy/widgets/bottom_sheets/number_bottom_sheet.dart';
 import 'package:oru_copy/widgets/mind_menu_item.dart';
-import 'package:oru_copy/widgets/bottom_sheets/name_bottom_sheet.dart';
-import 'package:oru_copy/widgets/bottom_sheets/otp_bottom_sheet.dart';
 import 'package:oru_copy/widgets/bottom_ui_widgets/faq_section.dart';
 import 'package:oru_copy/widgets/share_widget.dart';
 import 'package:oru_copy/widgets/sort_buttons.dart';
-import 'package:share_plus/share_plus.dart';
 
 class HomePageScreen extends ConsumerStatefulWidget {
   const HomePageScreen({super.key});
@@ -394,6 +389,7 @@ class _HomePageScreenState extends ConsumerState<HomePageScreen> {
                   ),
                   Container(
                     height: 280,
+                    color: const Color.fromRGBO(54, 54, 54, 1),
                     child: Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: Image.asset(
@@ -401,7 +397,6 @@ class _HomePageScreenState extends ConsumerState<HomePageScreen> {
                         height: 220,
                       ),
                     ),
-                    color: const Color.fromRGBO(54, 54, 54, 1),
                   ),
                   const SizedBox(
                     height: 30,

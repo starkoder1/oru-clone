@@ -12,7 +12,7 @@ class NumberBottomSheet extends ConsumerWidget {
     final phoneController = ref.watch(phoneControllerProvider);
     final isChecked = ref.watch(termsAcceptedProvider);
 
-    void _submit() {
+    void submit() {
       if (phoneController.text.length == 10) {
         // Pop this bottom sheet with a result (e.g., true)
         Navigator.pop(context, true);
@@ -102,7 +102,7 @@ class NumberBottomSheet extends ConsumerWidget {
             width: double.infinity,
             height: 50,
             child: ElevatedButton(
-              onPressed: _submit,
+              onPressed: submit,
               style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.indigo.shade700,
                   padding: EdgeInsets.symmetric(vertical: 15),

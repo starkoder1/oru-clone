@@ -2,9 +2,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:oru_copy/firebase_options.dart';
-import 'package:oru_copy/providers/otp_provider.dart';
-import 'package:oru_copy/screens/name_screen.dart';
-import 'package:oru_copy/screens/otp_screen.dart';
 import 'package:oru_copy/screens/splash_screen.dart';
 import 'package:oru_copy/services/notification_service.dart';
 
