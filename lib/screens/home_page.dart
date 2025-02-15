@@ -159,7 +159,7 @@ class _HomePageScreenState extends ConsumerState<HomePageScreen> {
                                   icon: const Icon(Icons.mic_none,
                                       color: Colors.grey),
                                   onPressed: () {
-                                    // TODO: Implement Voice Search
+                                    
                                   },
                                 ),
                               ],
@@ -328,7 +328,7 @@ class _HomePageScreenState extends ConsumerState<HomePageScreen> {
                               icon:
                                   const Icon(Icons.arrow_forward_ios, size: 16),
                               onPressed: () {
-                                // TODO: Implement "See All Brands" action
+                                
                               },
                             ),
                           ],
@@ -434,7 +434,7 @@ class _HomePageScreenState extends ConsumerState<HomePageScreen> {
         duration: const Duration(milliseconds: 200),
         child: FloatingActionButton.extended(
           onPressed: () {
-            // TODO: Implement Sell + action
+
           },
           backgroundColor: Colors.yellow.shade700,
           foregroundColor: const Color.fromARGB(255, 142, 142, 142),

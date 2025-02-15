@@ -29,8 +29,7 @@ class AuthState {
  }
 }
 
-// AuthService class - MERGED INTO THIS FILE
-// AuthService class - MERGED INTO THIS FILE (lib/providers/auth_provider.dart)
+
 class AuthService {
  final String baseUrl = 'http://40.90.224.241:5000';
 
@@ -65,7 +64,7 @@ class AuthNotifier extends StateNotifier<AuthState> {
 
  AuthNotifier({required this.authService, required this.ref}) : super(AuthState());
 
- Future<void> generateOtp() async { // Removed mobileNumber parameter, get from provider
+ Future<void> generateOtp() async { 
   state = state.copyWith(isLoading: true, isOtpSent: false);
 
   final mobileNumberString = ref.read(phoneNumberProvider); // Read mobileNumber from provider

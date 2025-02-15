@@ -10,7 +10,7 @@ import 'package:oru_copy/services/notification_service.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform, // Use your generated firebase_options.dart
+    options: DefaultFirebaseOptions.currentPlatform, 
   );
   await NotificationService().requestPermissionAndSubscribe();
   await NotificationService().initialize();
