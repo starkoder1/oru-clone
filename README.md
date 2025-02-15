@@ -124,7 +124,6 @@ Here’s a list of the main Flutter packages I used and why they were helpful in
 | ------------------------ | ------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
 | `flutter_riverpod`      | Latest              | **State Management:**  The backbone of managing state throughout the app, making UI updates reactive and data flow predictable.   |
 | `http`                   | Latest              | **API Communication:** For making all the network requests to fetch product listings, handle login, and other backend interactions. |
-| `shared_preferences`     | Latest              | **Persistent Login:**  To save login cookies and CSRF tokens locally so users stay logged in even after closing and reopening the app. |
 | `url_launcher`           | Latest              | **Social Media Links:** To directly open social media apps (Instagram, Telegram, etc.) when users tap on those icons.        |
 | `share_plus`             | Latest              | **Sharing:**  For implementing the share functionality, like sharing product listings on social media (though placeholder in this version). |
 | `firebase_core`          | Latest              | **Firebase Foundation:** Required to initialize Firebase in the app, which is needed for Firebase Cloud Messaging.            |
